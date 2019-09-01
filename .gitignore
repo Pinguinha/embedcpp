@@ -1,3 +1,9 @@
+/build*
+/.vscode*
+/.vs*
+.clang-format
+.clang-tidy
+
 # Prerequisites
 *.d
 
