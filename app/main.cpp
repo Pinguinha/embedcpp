@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
     fs::path resource_path(argv[1]);
     std::string_view symbol = argv[2];
     if (!fs::exists(resource_path)) {
-      throw std::runtime_error("Resource path \"" + resource_path.c_str() +
+      throw std::runtime_error("Resource path \"" + std::string(argv[1]) +
                                "\" does not exists!");
     }
     std::ifstream in(resource_path.c_str(), std::ios_base::binary);
