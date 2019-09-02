@@ -1,21 +1,22 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(embedcpp VERSION 0.1 LANGUAGES CXX)
+project(embedcpp VERSION 0.2 LANGUAGES CXX)
 
-function(embedcpp_generate out_var)
+function(embedcpp_generate path_to_gen_files include_dir)
     set(result)
-    foreach(in_f ${ARGN})
-        file(RELATIVE_PATH src_f ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${in_f})
-        set(out_f "${PROJECT_BINARY_DIR}/${in_f}.embed.hpp")
-        add_custom_command(OUTPUT ${out_f}
-                COMMAND embedcpp ${src_f} ${out_f}
-                DEPENDS ${in_f}
+    foreach(input_file ${ARGN})
+        file(RELATIVE_PATH input_file_rel_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${input_file})
+        set(dest_path "${PROJECT_BINARY_DIR}/embedcpp/embedcpp/${input_file}.embed.hpp")
+        add_custom_command(OUTPUT ${dest_path}
+                COMMAND embedcpp ${input_file_rel_path} ${dest_path}
+                DEPENDS ${input_file}
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-                COMMENT "Generating file for embedding ${out_f}"
+                COMMENT "Generating file for embedding ${dest_path}"
                 VERBATIM)
-        list(APPEND result "${out_f}")
+        list(APPEND result "${dest_path}")
     endforeach()
-    set(${out_var} "${result}" PARENT_SCOPE)
+    set(${path_to_gen_files} "${result}" PARENT_SCOPE)
+    set(${include_dir} "${PROJECT_BINARY_DIR}/embedcpp/" PARENT_SCOPE)
 endfunction()
 
 # Only do these if this is the main project, and not if it is included through add_subdirectory
